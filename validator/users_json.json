@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "User details",
+  "description": "This schema gives some basic details about a user",
+  "type": "array",
+  "items": 
+    {
+      "type": "object",
+      "properties": {
+        "userdata":{
+          "type":"array",
+          "description": "contains the data of the user",
+          "minItems":1,
+          "maxItems": 1,
+          "items":{
+            "type": "object",
+            "properties": {
+              "id": {
+                "description": "This is a unique identifier of the user",
+                "type": "integer",
+                "minimum": 1
+              },
+              "username": {
+                "description": "Name of the user",
+                "type": "string",
+                "minLength":3,
+                "maxLength": 50
+              }
+            },
+            "required": [
+              "id",
+              "username"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalItems": false
+    }
+}

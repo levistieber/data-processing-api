@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="response">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="error">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="message">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:enumeration value="The request was malformed"/>
+                    <xs:enumeration value="The the client is not authorized to perform the requested action"/>
+                    <xs:enumeration value="A resource with that same place name already exists"/>
+                    <xs:enumeration value="The requested resource was not found."/>
+                    <xs:enumeration value="The method is not allowed for the requested URL"/>
+                    <xs:enumeration value="A resource with that name already exists."/>
+                    <xs:enumeration value="A resource with that ID no longer exists."/>
+                    <xs:enumeration value="The requested media type is not supperted by the server."/>
+                    <xs:enumeration value="The requested data was properly formatted but contained invalid or missing data."/>
+                    <xs:enumeration value="The server threw an error when processing the request"/>
+                    <xs:enumeration value="A resource with that same route name already exists"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="name">
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:pattern value="BadRequest|Unauthorized|ResourceNotFound|MethodNotAllowed|ResourceAlreadyExistsError|ResourceDoesNotExist|UnsupportedMediaType|UnprocessableEntity|InternalServerError"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="status">
+        <xs:simpleType>
+          <xs:restriction base="xs:positiveInteger">
+            <xs:pattern value="400|401|404|405|409|410|415|422|500"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
