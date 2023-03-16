@@ -64,3 +64,24 @@ def get_place_xml(result):
         root.append(elem)
     
     return tostring(root,encoding='UTF-8', method='xml')
+
+def get_place_response(xml):
+    tree = ET.fromstring(xml)
+    place_dic={'place':{}}
+    for node in tree.iter('place'):
+        for elem in node:
+            if not elem.tag==node.tag:
+                if elem:
+                    place_dic['place'][elem.tag] = recursive(elem)
+                else:
+                    place_dic['place'][elem.tag] = elem.text
+    return place_dic
+
+def recursive(list):
+    if list:
+        rec_dic={}
+        for elem in list:
+            rec_dic[elem.tag] = recursive(elem)
+        return rec_dic
+    else:
+        return list.text
