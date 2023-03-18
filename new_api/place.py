@@ -20,7 +20,7 @@ def place():
     else:
         if request.content_type == 'application/json':
             result = Place.query.filter_by(id=request_id).first()
-            return Response(get_place(result),mimetype='application/json',status=200)
+            return Response(get_place(result), mimetype='application/json',status=200)
         elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
             result = Place.query.filter_by(id=request_id).first()
             return Response(get_place_xml(result), mimetype='text/xml',status=200)

@@ -11,6 +11,7 @@ def credentials(xml):
                 cred_dic['credentials'][elem.tag] = elem.text
     return cred_dic
 
+#PLACE BUILDER
 def get_place(result):
     plcs = {'places':{}}
     plc = {
@@ -24,6 +25,30 @@ def get_place(result):
     }
     plcs['places'].update(plc)
     return plcs
+
+def get_place_xml(row):
+    root =Element('places')
+
+    elem = Element('place')
+    elem.set('id',str(row.id))
+
+    name = Element('name')
+    coordinates = Element('coordinates')
+    latitude = Element('latitude')
+    longitude = Element('longitude')
+
+    name.text = row.name
+    latitude.text = str(row.latitude)
+    longitude.text = str(row.longitude)
+        
+    coordinates.append(latitude)
+    coordinates.append(longitude)
+
+    elem.append(name)
+    elem.append(coordinates)
+    root.append(elem)
+    
+    return tostring(root,encoding='UTF-8', method='xml')
 
 def get_places(result):
     plcs = {'places':{}}
@@ -65,30 +90,6 @@ def get_places_xml(result):
     
     return tostring(root,encoding='UTF-8', method='xml')
 
-def get_place_xml(row):
-    root =Element('places')
-
-    elem = Element('place')
-    elem.set('id',str(row.id))
-
-    name = Element('name')
-    coordinates = Element('coordinates')
-    latitude = Element('latitude')
-    longitude = Element('longitude')
-
-    name.text = row.name
-    latitude.text = str(row.latitude)
-    longitude.text = str(row.longitude)
-        
-    coordinates.append(latitude)
-    coordinates.append(longitude)
-
-    elem.append(name)
-    elem.append(coordinates)
-    root.append(elem)
-    
-    return tostring(root,encoding='UTF-8', method='xml')
-
 def get_place_response(xml):
     tree = ET.fromstring(xml)
     place_dic={'place':{}}
@@ -109,3 +110,94 @@ def recursive(list):
         return rec_dic
     else:
         return list.text
+
+#ROUTE BUILDER
+def get_routes(result):
+    rts = {'routes':{}}
+    for row in result:
+        rt = {
+            row.name:{
+                'id': (row.id),
+                'locations':{
+                    'start': (row.start_id),
+                    'end': (row.end_id)
+                }
+            }
+        }
+        rts['routes'].update(rt)
+    return rts
+
+def get_routes_xml(result):
+    root =Element('routes')
+
+    for row in result:
+        elem = Element('route')
+        elem.set('id',str(row.id))
+
+        name = Element('name')
+        locations = Element('locations')
+        start = Element('start')
+        end = Element('end')
+
+        name.text = row.name
+        start.text = str(row.start_id)
+        end.text = str(row.end_id)
+        
+        locations.append(start)
+        locations.append(end)
+
+        elem.append(name)
+        elem.append(locations)
+        root.append(elem)
+    
+    return tostring(root,encoding='UTF-8', method='xml')
+
+def get_route(row):
+    rts = {'routes':{}}
+    rt = {
+        row.name:{
+            'id': (row.id),
+            'locations':{
+                'start': (row.start_id),
+                'end': (row.end_id)
+            }
+        }
+    }
+    rts['routes'].update(rt)
+    return rts
+
+def get_route_xml(row):
+    root =Element('routes')
+
+    elem = Element('route')
+    elem.set('id',str(row.id))
+
+    name = Element('name')
+    locations = Element('locations')
+    start = Element('start')
+    end = Element('end')
+
+    name.text = row.name
+    start.text = str(row.start_id)
+    end.text = str(row.end_id)
+        
+    locations.append(start)
+    locations.append(end)
+
+    elem.append(name)
+    elem.append(locations)
+    root.append(elem)
+    
+    return tostring(root,encoding='UTF-8', method='xml')
+
+def get_route_response(xml):
+    tree = ET.fromstring(xml)
+    place_dic={'route':{}}
+    for node in tree.iter('route'):
+        for elem in node:
+            if not elem.tag==node.tag:
+                if elem:
+                    place_dic['route'][elem.tag] = recursive(elem)
+                else:
+                    place_dic['route'][elem.tag] = elem.text
+    return place_dic

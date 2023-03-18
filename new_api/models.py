@@ -19,8 +19,9 @@ class Place(db.Model):
 
 class Route(db.Model):
     __tablename__ = 'route'
-    __column_names__={'id','start_id','end_id','user_id'}
+    __column_names__={'id','name', 'start_id','end_id','user_id'}
     id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
+    name=db.COlumn(db.String(1000), unique=True)
     start_id = db.Column(db.Integer, db.ForeignKey('place.id'), nullable=False)
     end_id = db.Column(db.Integer, db.ForeignKey('place.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
