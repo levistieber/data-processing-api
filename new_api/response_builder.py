@@ -40,7 +40,7 @@ def get_places(result):
         plcs['places'].update(plc)
     return plcs
 
-def get_place_xml(result):
+def get_places_xml(result):
     root =Element('places')
 
     for row in result:
@@ -62,6 +62,30 @@ def get_place_xml(result):
         elem.append(name)
         elem.append(coordinates)
         root.append(elem)
+    
+    return tostring(root,encoding='UTF-8', method='xml')
+
+def get_place_xml(row):
+    root =Element('places')
+
+    elem = Element('place')
+    elem.set('id',str(row.id))
+
+    name = Element('name')
+    coordinates = Element('coordinates')
+    latitude = Element('latitude')
+    longitude = Element('longitude')
+
+    name.text = row.name
+    latitude.text = str(row.latitude)
+    longitude.text = str(row.longitude)
+        
+    coordinates.append(latitude)
+    coordinates.append(longitude)
+
+    elem.append(name)
+    elem.append(coordinates)
+    root.append(elem)
     
     return tostring(root,encoding='UTF-8', method='xml')
 
