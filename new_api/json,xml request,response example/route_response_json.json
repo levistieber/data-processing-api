@@ -1,0 +1,12 @@
+{
+    "routes": {
+        "Elso": {
+            "id": 1,
+            "locations": {
+                "end": 4,
+                "start": 3
+            },
+            "user_id": 1
+        }
+    }
+}
