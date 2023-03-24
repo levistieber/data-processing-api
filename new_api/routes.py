@@ -1,38 +1,40 @@
-from flask import Blueprint, request, redirect, request, url_for, flash, Response
+from flask import Blueprint, request, redirect, request, url_for, flash, Response, jsonify, make_response
 from database import db
 from models import Route
 from response_builder import get_route, get_routes, get_route_xml, get_routes_xml, get_route_response
 
-route_blueprint = Blueprint('place_routes', __name__)
+route_blueprint = Blueprint('route_blueprint', __name__)
 
 #GET route
 @route_blueprint.route('/api/resources/user/route')
-def place():
+def route():
     request_id = request.args.get('id')
 
     if request_id is None:
         if request.content_type == 'application/json':
             result = Route.query.all()
-            return Response(get_routes(result),mimetype='application/json',status=200)
+            return make_response(jsonify(get_routes(result)), 200)
+            #return Response(,mimetype='application/json',status=200)
         elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
             result = Route.query.all()
             return Response(get_routes_xml(result), mimetype='text/xml',status=200)
     else:
         if request.content_type == 'application/json':
             result = Route.query.filter_by(id=request_id).first()
-            return Response(get_routes(result),mimetype='application/json',status=200)
+            #return Response(get_routes(result),mimetype='application/json',status=200)
+            return make_response(jsonify(get_route(result)), 200)
         elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
             result = Route.query.filter_by(id=request_id).first()
-            return Response(get_routes_xml(result), mimetype='text/xml',status=200)
+            return Response(get_route_xml(result), mimetype='text/xml',status=200)
         
 #POST route
 @route_blueprint.route('/api/resources/user/route', methods=['POST'])
-def place_post():
+def route_post():
     if request.content_type == 'application/json':
-        name = request.json.get('name', None)
-        start = request.json.get('latitude', None)
-        end = request.json.get('longitude', None)
-        user_id = request.json.get('user_id',None)
+        name = request.json.get('route').get('name')
+        start = request.json.get('route').get("locations").get('start', None)
+        end = request.json.get('route').get('end', None)
+        user_id = request.json.get('route').get('user_id',None)
         if not name:
             return Response('Missing name!',mimetype='application/json', status=400)
         if not start:
@@ -42,6 +44,7 @@ def place_post():
         if not user_id:
             return Response('Missing user!',mimetype='application/json', status=400)
     elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
+        ##return get_route_response(request.data)
         name = get_route_response(request.data)['route']['name']
         start = get_route_response(request.data)['route']['locations']['start']
         end = get_route_response(request.data)['route']['locations']['end']
@@ -66,7 +69,7 @@ def place_post():
     
 #UPDATE place
 @route_blueprint.route('/api/resources/user/route', methods=['PUT'])
-def place_put():
+def route_put():
     request_id = request.args.get('id')
     
     if request_id is None:
@@ -105,7 +108,7 @@ def place_put():
         
 #DELETE place
 @route_blueprint.route('/api/resources/user/route', methods=['DELETE'])
-def place_delete():
+def route_delete():
     request_id = request.args.get('id')
     if request_id is None:
         return 'No id', 400

@@ -1,4 +1,4 @@
-from flask import Blueprint, request, redirect, request, url_for, flash, Response
+from flask import Blueprint, request, redirect, request, url_for, flash, Response, make_response, jsonify
 from database import db
 from models import Place, User
 from response_builder import get_place, get_places, get_places_xml, get_place_response, get_place_xml
@@ -13,14 +13,16 @@ def place():
     if request_id is None:
         if request.content_type == 'application/json':
             result = Place.query.all()
-            return Response(get_places(result),mimetype='application/json',status=200)
+            return make_response(jsonify(get_places(result)), 200)
+            ##return Response(get_places(result),mimetype='application/json',status=200)
         elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
             result = Place.query.all()
             return Response(get_places_xml(result), mimetype='text/xml',status=200)
     else:
         if request.content_type == 'application/json':
             result = Place.query.filter_by(id=request_id).first()
-            return Response(get_place(result), mimetype='application/json',status=200)
+            return make_response(jsonify(get_place(result)), 200)
+            ##return Response(get_place(result), mimetype='application/json',status=200)
         elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
             result = Place.query.filter_by(id=request_id).first()
             return Response(get_place_xml(result), mimetype='text/xml',status=200)
@@ -29,9 +31,11 @@ def place():
 @place_blueprint.route('/api/resources/place', methods=['POST'])
 def place_post():
     if request.content_type == 'application/json':
-        name = request.json.get('name', None)
-        latitude = request.json.get('latitude', None)
-        longitude = request.json.get('longitude', None)
+        name = list(request.json.get('place'))[0]
+        ##latitude = request.json.get('place').get(list(request.json.get('place'))[0]).get('coordinates').get('latitude', None)
+        latitude = request.json.get('place').get(name).get('coordinates').get('latitude', None)
+        ##longitude = request.json.get('place').get(list(request.json.get('place'))[0]).get('coordinates').get('longitude', None)
+        longitude = request.json.get('place').get(name).get('coordinates').get('longitude', None)
         if not name:
             return Response('Missing name!',mimetype='application/json', status=400)
         if not latitude:
@@ -39,9 +43,10 @@ def place_post():
         if not longitude:
             return Response('Missing longitude!',mimetype='application/json', status=400)
     elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
-        name = get_place_response(request.data)['place']['name']
-        latitude = get_place_response(request.data)['place']['coordinates']['latitude']
-        longitude = get_place_response(request.data)['place']['coordinates']['longitude']
+        ##return get_place_response(request.data)
+        name = list(get_place_response(request.data)['place'])[0]
+        latitude = get_place_response(request.data)['place'][name]['coordinates']['latitude']
+        longitude = get_place_response(request.data)['place'][name]['coordinates']['longitude']
         if not name:
             return Response('Missing name!',mimetype='text/xml',status=400)
         if not latitude:
@@ -71,13 +76,16 @@ def place_put():
         latitude = None
         longitude = None
         if request.content_type == 'application/json':
-            name = request.json.get('name')
-            latitude = request.json.get('latitude')
-            longitude = request.json.get('longiutde')
+            name = list(request.json.get('place'))[0]
+            ##latitude = request.json.get('place').get(list(request.json.get('place'))[0]).get('coordinates').get('latitude', None)
+            latitude = request.json.get('place').get(name).get('coordinates').get('latitude', None)
+            ##longitude = request.json.get('place').get(list(request.json.get('place'))[0]).get('coordinates').get('longitude', None)
+            longitude = request.json.get('place').get(name).get('coordinates').get('longitude', None)
         elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
-            name = get_place_response(request.data)['place']['name']
-            latitude = get_place_response(request.data)['place']['coordinates']['latitude']
-            longitude = get_place_response(request.data)['place']['coordinates']['longitude']
+            ##return get_place_response(request.data)
+            name = list(get_place_response(request.data)['place'])[0]
+            latitude = get_place_response(request.data)['place'][name]['coordinates']['latitude']
+            longitude = get_place_response(request.data)['place'][name]['coordinates']['longitude']
         else:
             return Response('Wrong content type!',mimetype='application/json', status=400)
         if name is not None:

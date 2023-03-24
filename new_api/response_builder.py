@@ -93,14 +93,23 @@ def get_places_xml(result):
 def get_place_response(xml):
     tree = ET.fromstring(xml)
     place_dic={'place':{}}
+    inner_dic = {}
+    name = None
     for node in tree.iter('place'):
         for elem in node:
             if not elem.tag==node.tag:
                 if elem:
-                    place_dic['place'][elem.tag] = recursive(elem)
+                    inner_dic[name][elem.tag] = recursive(elem)
+                    ##place_dic['place'][elem.tag] = recursive(elem)
                 else:
-                    place_dic['place'][elem.tag] = elem.text
+                    ##inner_dic[name][elem.tag] = recursive(elem)
+                    if elem.tag == 'name':
+                        name = elem.text
+                        inner_dic = {elem.text :{}}
+                    inner_dic[name][elem.tag] = elem.text
+    place_dic['place'].update(inner_dic)
     return place_dic
+    ##return inner_dic
 
 def recursive(list):
     if list:
@@ -121,7 +130,8 @@ def get_routes(result):
                 'locations':{
                     'start': (row.start_id),
                     'end': (row.end_id)
-                }
+                },
+                'user_id': row.user_id
             }
         }
         rts['routes'].update(rt)
@@ -138,16 +148,19 @@ def get_routes_xml(result):
         locations = Element('locations')
         start = Element('start')
         end = Element('end')
+        user_id = Element('user_id')
 
         name.text = row.name
         start.text = str(row.start_id)
         end.text = str(row.end_id)
+        user_id.text = str(row.user_id)
         
         locations.append(start)
         locations.append(end)
 
         elem.append(name)
         elem.append(locations)
+        elem.append(user_id)
         root.append(elem)
     
     return tostring(root,encoding='UTF-8', method='xml')
@@ -160,7 +173,8 @@ def get_route(row):
             'locations':{
                 'start': (row.start_id),
                 'end': (row.end_id)
-            }
+            },
+            'user_id': row.user_id
         }
     }
     rts['routes'].update(rt)
@@ -176,16 +190,19 @@ def get_route_xml(row):
     locations = Element('locations')
     start = Element('start')
     end = Element('end')
+    user_id = Element('user_id')
 
     name.text = row.name
     start.text = str(row.start_id)
     end.text = str(row.end_id)
+    user_id.text = str(row.user_id)
         
     locations.append(start)
     locations.append(end)
 
     elem.append(name)
     elem.append(locations)
+    elem.append(user_id)
     root.append(elem)
     
     return tostring(root,encoding='UTF-8', method='xml')

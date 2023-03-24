@@ -1,25 +1,18 @@
 {
-    "places": {
-        "Emmen": {
-            "coordinates": {
-                "latitude": 11.0,
-                "longitude": 11.0
-            },
-            "id": 1
-        },
-        "Nyiregy": {
-            "coordinates": {
-                "latitude": 10.0,
-                "longitude": 10.0
-            },
-            "id": 2
-        },
-        "Pest": {
-            "coordinates": {
-                "latitude": 10.0,
-                "longitude": 10.0
-            },
-            "id": 3
-        }
+  "places": {
+    "Emmen": {
+      "coordinates": {
+        "latitude": 11.0,
+        "longitude": 11.0
+      },
+      "id": 1
+    },
+    "EmmenAlso": {
+      "coordinates": {
+        "latitude": 12.0,
+        "longitude": 12.0
+      },
+      "id": 2
     }
+  }
 }
