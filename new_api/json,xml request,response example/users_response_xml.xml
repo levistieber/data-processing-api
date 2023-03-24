@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<users>
+    <user id="1">
+        <name>test</name>
+        <email>testaccpunt@gmail.com</email>
+        <password>dsadasdasdasd</password>
+    </user>
+</users>
