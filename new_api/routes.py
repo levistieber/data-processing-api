@@ -31,10 +31,10 @@ def route():
 @route_blueprint.route('/api/resources/user/route', methods=['POST'])
 def route_post():
     if request.content_type == 'application/json':
-        name = request.json.get('route').get('name')
-        start = request.json.get('route').get("locations").get('start', None)
-        end = request.json.get('route').get('end', None)
-        user_id = request.json.get('route').get('user_id',None)
+        name = list(request.json.get('route'))[0]
+        start = request.json.get('route').get(name).get('locations').get('start_id', None)
+        end = request.json.get('route').get(name).get('locations').get('end_id', None)
+        user_id = request.json.get('route').get(name).get('user_id',None)
         if not name:
             return Response('Missing name!',mimetype='application/json', status=400)
         if not start:
@@ -46,8 +46,8 @@ def route_post():
     elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
         ##return get_route_response(request.data)
         name = get_route_response(request.data)['route']['name']
-        start = get_route_response(request.data)['route']['locations']['start']
-        end = get_route_response(request.data)['route']['locations']['end']
+        start = get_route_response(request.data)['route']['locations']['start_id']
+        end = get_route_response(request.data)['route']['locations']['end_id']
         user_id = get_route_response(request.data)['route']['user_id']
         if not name:
             return Response('Missing name!',mimetype='application/json', status=400)
@@ -81,14 +81,14 @@ def route_put():
         end = None
         user_id = None
         if request.content_type == 'application/json':
-            name = request.json.get('name', None)
-            start = request.json.get('latitude', None)
-            end = request.json.get('longitude', None)
-            user_id = request.json.get('user_id',None)
+            name = list(request.json.get('route'))[0]
+            start = request.json.get('route').get(name).get('locations').get('start_id', None)
+            end = request.json.get('route').get(name).get('locations').get('end_id', None)
+            user_id = request.json.get('route').get(name).get('user_id',None)
         elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
             name = get_route_response(request.data)['route']['name']
-            start = get_route_response(request.data)['route']['locations']['start']
-            end = get_route_response(request.data)['route']['locations']['end']
+            start = get_route_response(request.data)['route']['locations']['start_id']
+            end = get_route_response(request.data)['route']['locations']['end_id']
             user_id = get_route_response(request.data)['route']['user_id']
         else:
             return Response('Wrong content type!',mimetype='application/json', status=400)

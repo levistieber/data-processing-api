@@ -11,6 +11,104 @@ def credentials(xml):
                 cred_dic['credentials'][elem.tag] = elem.text
     return cred_dic
 
+def signup_request(xml):
+    tree = ET.fromstring(xml)
+    user_dic={'user':{}}
+    inner_dic = {}
+    name = None
+    for node in tree.iter('user'):
+        for elem in node:
+            if not elem.tag==node.tag:
+                if elem:
+                    inner_dic[name][elem.tag] = recursive(elem)
+                    ##place_dic['place'][elem.tag] = recursive(elem)
+                else:
+                    ##inner_dic[name][elem.tag] = recursive(elem)
+                    if elem.tag == 'name':
+                        name = elem.text
+                        inner_dic = {elem.text :{}}
+                    inner_dic[name][elem.tag] = elem.text
+    user_dic['user'].update(inner_dic)
+    return user_dic
+
+#USER BUILDER
+def get_user(result):
+    usrs = {'users':{}}
+    usr = {
+        result.name:{
+            'id': (result.id),
+            'credentials':{
+                'email': (result.email),
+                'password': str(result.password)
+            }
+        }
+    }
+    usrs['users'].update(usr)
+    return usrs
+
+def get_users(result):
+    usrs = {'users':{}}
+    for row in result:
+        usr = {
+            row.name:{
+                'id': (row.id),
+                'credentials':{
+                    'email': (row.email),
+                    'password': str(row.password)
+                }
+            }
+        }
+        usrs['users'].update(usr)
+    return usrs
+
+def get_user_xml(row):
+    root =Element('users')
+
+    elem = Element('user')
+    elem.set('id',str(row.id))
+
+    name = Element('name')
+    credentials = Element('credentials')
+    email = Element('email')
+    password = Element('password')
+
+    name.text = row.name
+    email.text = str(row.email)
+    password.text = str(row.password)
+        
+    credentials.append(email)
+    credentials.append(password)
+
+    elem.append(name)
+    elem.append(credentials)
+    root.append(elem)
+    
+    return tostring(root, encoding='UTF-8', method='xml', xml_declaration=True)
+
+def get_users_xml(result):
+    root =Element('users')
+    for row in result:
+        elem = Element('user')
+        elem.set('id',str(row.id))
+
+        name = Element('name')
+        credentials = Element('credentials')
+        email = Element('email')
+        password = Element('password')
+
+        name.text = row.name
+        email.text = str(row.email)
+        password.text = str(row.password)
+        
+        credentials.append(email)
+        credentials.append(password)
+
+        elem.append(name)
+        elem.append(credentials)
+        root.append(elem)
+    
+    return tostring(root, encoding='UTF-8', method='xml', xml_declaration=True)
+
 #PLACE BUILDER
 def get_place(result):
     plcs = {'places':{}}
@@ -48,7 +146,7 @@ def get_place_xml(row):
     elem.append(coordinates)
     root.append(elem)
     
-    return tostring(root,encoding='UTF-8', method='xml')
+    return tostring(root,encoding='UTF-8', method='xml', xml_declaration=True)
 
 def get_places(result):
     plcs = {'places':{}}
@@ -88,7 +186,7 @@ def get_places_xml(result):
         elem.append(coordinates)
         root.append(elem)
     
-    return tostring(root,encoding='UTF-8', method='xml')
+    return tostring(root,encoding='UTF-8', method='xml', xml_declaration=True)
 
 def get_place_response(xml):
     tree = ET.fromstring(xml)
@@ -128,8 +226,8 @@ def get_routes(result):
             row.name:{
                 'id': (row.id),
                 'locations':{
-                    'start': (row.start_id),
-                    'end': (row.end_id)
+                    'start_id': (row.start_id),
+                    'end_id': (row.end_id)
                 },
                 'user_id': row.user_id
             }
@@ -146,8 +244,8 @@ def get_routes_xml(result):
 
         name = Element('name')
         locations = Element('locations')
-        start = Element('start')
-        end = Element('end')
+        start = Element('start_id')
+        end = Element('end_id')
         user_id = Element('user_id')
 
         name.text = row.name
@@ -163,7 +261,7 @@ def get_routes_xml(result):
         elem.append(user_id)
         root.append(elem)
     
-    return tostring(root,encoding='UTF-8', method='xml')
+    return tostring(root,encoding='UTF-8', method='xml', xml_declaration=True)
 
 def get_route(row):
     rts = {'routes':{}}
@@ -205,7 +303,7 @@ def get_route_xml(row):
     elem.append(user_id)
     root.append(elem)
     
-    return tostring(root,encoding='UTF-8', method='xml')
+    return tostring(root,encoding='UTF-8', method='xml', xml_declaration=True)
 
 def get_route_response(xml):
     tree = ET.fromstring(xml)

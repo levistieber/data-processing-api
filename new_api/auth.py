@@ -31,6 +31,7 @@ def login_post():
 def login():
     return 'Login here!'
 
+#CREATE USER
 @auth_blueprint.route('/api/signup', methods=['POST'])
 def signup_post():
     email = None
