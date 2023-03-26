@@ -1,4 +1,5 @@
 <!--POST/PUT request body-->
+<?xml version='1.0' encoding='UTF-8'?>
 <place>
     <name>Emmen</name>
     <coordinates>
@@ -8,6 +9,7 @@
 </place>
 
 <!--GET response for multiple-->
+<?xml version='1.0' encoding='UTF-8'?>
 <places>
     <place id="1">
         <name>Emmen</name>
