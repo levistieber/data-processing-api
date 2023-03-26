@@ -2,7 +2,6 @@ import re
 import xml.etree.ElementTree as ET
 from xml.etree.ElementTree import Element, tostring
 
-#AUTH BUILDER
 def credentials(xml):
     tree = ET.fromstring(xml)
     cred_dic={'credentials':{}}
