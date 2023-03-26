@@ -40,11 +40,26 @@ def get_user(result):
             'id': (result.id),
             'credentials':{
                 'email': (result.email),
-                'password': (result.password)
+                'password': str(result.password)
             }
         }
     }
     usrs['users'].update(usr)
+    return usrs
+
+def get_users(result):
+    usrs = {'users':{}}
+    for row in result:
+        usr = {
+            row.name:{
+                'id': (row.id),
+                'credentials':{
+                    'email': (row.email),
+                    'password': str(row.password)
+                }
+            }
+        }
+        usrs['users'].update(usr)
     return usrs
 
 def get_user_xml(row):
@@ -69,27 +84,11 @@ def get_user_xml(row):
     elem.append(credentials)
     root.append(elem)
     
-    return tostring(root,encoding='UTF-8', method='xml')
-
-def get_users(result):
-    usrs = {'users':{}}
-    for row in result:
-        usr = {
-            row.name:{
-                'id': (row.id),
-                'credentials':{
-                    'email': (row.email),
-                    'password': (row.password)
-                }
-            }
-        }
-        usrs['users'].update(usr)
-    return usrs
+    return tostring(root, encoding='UTF-8', method='xml', xml_declaration=True)
 
 def get_users_xml(result):
+    root =Element('users')
     for row in result:
-        root =Element('users')
-
         elem = Element('user')
         elem.set('id',str(row.id))
 
@@ -109,7 +108,7 @@ def get_users_xml(result):
         elem.append(credentials)
         root.append(elem)
     
-    return tostring(root,encoding='UTF-8', method='xml')
+    return tostring(root, encoding='UTF-8', method='xml', xml_declaration=True)
 
 #PLACE BUILDER
 def get_place(result):
@@ -148,7 +147,7 @@ def get_place_xml(row):
     elem.append(coordinates)
     root.append(elem)
     
-    return tostring(root,encoding='UTF-8', method='xml')
+    return tostring(root,encoding='UTF-8', method='xml', xml_declaration=True)
 
 def get_places(result):
     plcs = {'places':{}}
@@ -188,7 +187,7 @@ def get_places_xml(result):
         elem.append(coordinates)
         root.append(elem)
     
-    return tostring(root,encoding='UTF-8', method='xml')
+    return tostring(root,encoding='UTF-8', method='xml', xml_declaration=True)
 
 def get_place_response(xml):
     tree = ET.fromstring(xml)
@@ -228,8 +227,8 @@ def get_routes(result):
             row.name:{
                 'id': (row.id),
                 'locations':{
-                    'start': (row.start_id),
-                    'end': (row.end_id)
+                    'start_id': (row.start_id),
+                    'end_id': (row.end_id)
                 },
                 'user_id': row.user_id
             }
@@ -246,8 +245,8 @@ def get_routes_xml(result):
 
         name = Element('name')
         locations = Element('locations')
-        start = Element('start')
-        end = Element('end')
+        start = Element('start_id')
+        end = Element('end_id')
         user_id = Element('user_id')
 
         name.text = row.name
@@ -263,7 +262,7 @@ def get_routes_xml(result):
         elem.append(user_id)
         root.append(elem)
     
-    return tostring(root,encoding='UTF-8', method='xml')
+    return tostring(root,encoding='UTF-8', method='xml', xml_declaration=True)
 
 def get_route(row):
     rts = {'routes':{}}
@@ -305,7 +304,7 @@ def get_route_xml(row):
     elem.append(user_id)
     root.append(elem)
     
-    return tostring(root,encoding='UTF-8', method='xml')
+    return tostring(root,encoding='UTF-8', method='xml', xml_declaration=True)
 
 def get_route_response(xml):
     tree = ET.fromstring(xml)

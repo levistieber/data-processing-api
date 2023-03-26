@@ -39,6 +39,7 @@ def login_post():
         elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
             return Response('Login failed!', mimetype='text/html', status=400)
 
+#CREATE USER
 @auth_blueprint.route('/api/signup', methods=['POST'])
 def signup_post():
     email = None
