@@ -1,0 +1,79 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+    "description": "This schema gives some basic details abot the new route data",  
+	"title": "Base",
+	"type": "object",
+	"required": [
+		"route"
+	],
+	"properties": {
+		"route": {
+			"$id": "route", 
+			"title": "Route Item", 
+			"type": "object",
+            "description": "Contains the route",
+            "minProperties" : 1,
+            "maxProperties": 1,
+			"additionalProperties": {
+				"$id": "routename", 
+				"title": "Route name",
+                "description": "Name of the route", 
+				"type": "object",
+				"required": [
+					"locations",
+					"user_id"
+				],
+				"properties": {
+					"locations": {
+						"description": "Contains the locations id",
+						"$id": "locations", 
+						"title": "Locations", 
+						"type": "object",
+						"required": [
+							"end_id",
+							"start_id"
+						],
+						"properties": {
+							"start_id": {
+								"description": "Id of the start location",
+								"$id": "start_id", 
+								"title": "Start id", 
+								"type": "integer",
+								"examples": [
+									3
+								],
+								"minimum": 1,
+								"additionalProperties": false
+							},
+							"end_id": {
+								"description": "Id of the end location",
+								"$id": "end_id", 
+								"title": "Endid", 
+								"type": "integer",
+								"examples": [
+									4
+								],
+								"minimum": 1,
+								"additionalProperties": false
+							}
+						},
+						"additionalProperties": false
+					},
+					"user_id": {
+						"description": "Id of the user",
+						"$id": "user_id", 
+						"title": "User id", 
+						"type": "integer",
+						"examples": [
+							1
+						],
+						"minimum": 1,
+						"additionalProperties": false
+					}
+				},
+				"additionalProperties": false
+			}
+		}
+	},
+	"additionalProperties": false
+}

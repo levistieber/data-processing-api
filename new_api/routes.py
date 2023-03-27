@@ -1,6 +1,7 @@
 from flask import Blueprint, request, redirect, request, url_for, flash, Response, jsonify, make_response
 from database import db
 from models import Route
+import validator
 from response_builder import get_route, get_routes, get_route_xml, get_routes_xml, get_route_response
 
 route_blueprint = Blueprint('route_blueprint', __name__)
@@ -13,24 +14,34 @@ def route():
     if request_id is None:
         if request.content_type == 'application/json':
             result = Route.query.all()
+            if validator.validateJsonResponse(r'validators\json\get_route_schema.json', get_routes(result)):
+                return Response('Validation failed', mimetype='application/json', status=400)
             return make_response(jsonify(get_routes(result)), 200)
             #return Response(,mimetype='application/json',status=200)
         elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
             result = Route.query.all()
+            if validator.validateXmlResponse(r'validators\xml\get_route_schema.xsd', get_routes_xml(result)) is False:
+                return Response('Validation failed', mimetype='text/xml', status=400)
             return Response(get_routes_xml(result), mimetype='text/xml',status=200)
     else:
         if request.content_type == 'application/json':
             result = Route.query.filter_by(id=request_id).first()
+            if validator.validateJsonResponse(r'validators\json\get_route_schema.json', get_route(result)):
+                return Response('Validation failed', mimetype='application/json', status=400)
             #return Response(get_routes(result),mimetype='application/json',status=200)
             return make_response(jsonify(get_route(result)), 200)
         elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
             result = Route.query.filter_by(id=request_id).first()
+            if validator.validateXmlResponse(r'validators\xml\get_route_schema.xsd', get_route_xml(result)) is False:
+                return Response('Validation failed', mimetype='text/xml', status=400)
             return Response(get_route_xml(result), mimetype='text/xml',status=200)
         
 #POST route
 @route_blueprint.route('/api/resources/user/route', methods=['POST'])
 def route_post():
     if request.content_type == 'application/json':
+        if validator.validateJsonResponse(r'validators\json\post_put_route_schema.json', request.json):
+            return Response('Validation failed', mimetype='application/json', status=400)
         name = list(request.json.get('route'))[0]
         start = request.json.get('route').get(name).get('locations').get('start_id', None)
         end = request.json.get('route').get(name).get('locations').get('end_id', None)
@@ -45,6 +56,8 @@ def route_post():
             return Response('Missing user!',mimetype='application/json', status=400)
     elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
         ##return get_route_response(request.data)
+        if validator.validateXmlResponse(r'validators\xml\post_put_route_schema.xsd', request.data) is False:
+            return Response('Validation failed', mimetype='text/xml', status=400)
         name = get_route_response(request.data)['route']['name']
         start = get_route_response(request.data)['route']['locations']['start_id']
         end = get_route_response(request.data)['route']['locations']['end_id']
@@ -81,11 +94,15 @@ def route_put():
         end = None
         user_id = None
         if request.content_type == 'application/json':
+            if validator.validateJsonResponse(r'validators\json\post_put_route_schema.json', request.json):
+                return Response('Validation failed', mimetype='application/json', status=400)
             name = list(request.json.get('route'))[0]
             start = request.json.get('route').get(name).get('locations').get('start_id', None)
             end = request.json.get('route').get(name).get('locations').get('end_id', None)
             user_id = request.json.get('route').get(name).get('user_id',None)
         elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
+            if validator.validateXmlResponse(r'validators\xml\post_put_route_schema.xsd', request.data) is False:
+                return Response('Validation failed', mimetype='text/xml', status=400)
             name = get_route_response(request.data)['route']['name']
             start = get_route_response(request.data)['route']['locations']['start_id']
             end = get_route_response(request.data)['route']['locations']['end_id']

@@ -1,0 +1,79 @@
+{
+	"description": "This schema gives some basic details about the users data",
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "Base", 
+	"type": "object",
+	"required": [
+		"users"
+	],
+	"properties": {
+		"users": {
+			"$id": "users", 
+			"title": "User array", 
+			"type": "array",
+			"items":{
+				"$id": "useritem", 
+				"title": "User item", 
+				"type": "object",
+				"additionalProperties": {
+					"$id": "username", 
+					"title": "Username", 
+					"type": "object",
+					"required": [
+						"credentials",
+						"id"
+					],
+					"properties": {
+						"credentials": {
+							"$id": "credentials", 
+							"title": "Credentials",
+                            "description": "Contains the email and hashed password of the user", 
+							"type": "object",
+							"required": [
+								"email",
+								"password"
+							],
+							"properties": {
+								"email": {
+									"$id": "email", 
+									"title": "Email", 
+									"type": "string",
+                                    "description": "Email of the user",
+									"examples": [
+										"testasccpunt@gdasmail.com"
+									],
+									"format": "email",
+                                    "pattern": "^\\S+@\\S+\\.\\S+$",
+                                    "additionalProperties": false
+								},
+								"password": {
+									"$id": "password", 
+									"title": "Password", 
+									"type": "string",
+                                    "description": "Hashed password of the user",
+									"examples": [
+										"b'$2b$12$N8QgYao68hUxLBmCBng.SeVnhX0XSwDYh6JecRURR1B4tNpxqBi72'"
+									],
+                                    "additionalProperties": false
+								}
+							},
+                            "additionalProperties": false
+						},
+						"id": {
+							"$id": "userid", 
+							"title": "User id", 
+							"type": "integer",
+							"examples": [
+								1
+							],
+							"minimum": 1,
+                            "additionalProperties": false
+						}
+					},
+                    "additionalProperties": false
+			    }
+		    }
+		}
+	},
+    "additionalProperties": false
+}

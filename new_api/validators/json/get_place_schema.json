@@ -1,0 +1,85 @@
+{
+	"description": "This schema gives some basic details about the places data",
+	"$schema": "http://json-schema.org/draft-07/schema#", 
+	"title": "Base", 
+	"type": "object",
+	"required": [
+		"places"
+	],
+	"properties": {
+		"places": {
+			"$id": "places", 
+			"title": "Places",
+            "description": "Contains the places", 
+			"type": "array",
+			"items":{
+				"$id": "placeitem", 
+				"title": "Place items", 
+				"type": "object",
+				"additionalProperties": {
+					"$id": "place", 
+					"title": "Place name",
+                    "description": "This is the place of the name", 
+					"type": "object",
+					"required": [
+						"coordinates",
+						"id"
+					],
+					"properties": {
+						"coordinates": {
+							"$id": "coordinates", 
+                            "description": "Contains the coordinates",
+							"title": "Coordinates", 
+							"type": "object",
+							"required": [
+								"latitude",
+								"longitude"
+							],
+							"properties": {
+								"latitude": {
+									"$id": "latitude", 
+									"title": "Latitude",
+                                    "description": "Latitude of the place", 
+									"type": "number",
+									"examples": [
+										11.0
+									],
+									"minimum": -90.0,
+									"maximum": 90.0,
+									"additionalProperties": false
+								},
+								"longitude": {
+									"$id": "longitude", 
+									"title": "Longitude",
+                                    "description": "Longitude of the place", 
+									"type": "number",
+									"examples": [
+										11.0
+									],
+									"minimum": -180.0,
+									"maximum": 180.0,
+									"additionalProperties": false
+								}
+							},
+							"additionalProperties": false
+						},
+						"id": {
+							"$id": "id", 
+							"title": "Place id",
+                            "description": "Id of the place", 
+							"type": "integer",
+							"examples": [
+								1
+							],
+							"minimum": 1,
+							"additionalProperties": false
+						}
+					},
+					"additionalProperties": false
+				}
+			}
+		}
+	},
+	"additionalProperties": false
+}
+
