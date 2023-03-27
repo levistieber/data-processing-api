@@ -29,8 +29,8 @@
                     <xs:element name="longitude">
                         <xs:simpleType>
                             <xs:restriction base="xs:float">
-                                <xs:minInclusive value="-90.0"/>
-                                <xs:maxInclusive value="90.0"/>
+                                <xs:minInclusive value="-180.0"/>
+                                <xs:maxInclusive value="180.0"/>
                             </xs:restriction>
                         </xs:simpleType>
                     </xs:element>

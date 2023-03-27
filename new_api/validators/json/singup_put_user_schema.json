@@ -15,6 +15,7 @@
             "minProperties":1,
             "maxProperties": 1,
 			"additionalProperties": {
+				"$id": "username",
 				"type": "object",
 				"required": [
 					"credentials"

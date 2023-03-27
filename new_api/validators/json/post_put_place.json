@@ -1,0 +1,72 @@
+{
+    "description": "This schema gives some basic details about the new place data",
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "Base", 
+	"type": "object",
+	"required": [
+		"place"
+	],
+	"properties": {
+		"place": {
+			"$id": "place", 
+			"title": "Place", 
+			"type": "object",
+            "description": "Contains the data of the place",
+			"required": [
+				"EmmenLdast"
+			],
+            "minProperties":1,
+            "maxProperties": 1,
+			"additionalProperties": {
+				"$id": "placename", 
+				"title": "Place name",
+                "description": "This is the place of the name", 
+				"type": "object",
+				"required": [
+					"coordinates"
+				],
+				"properties": {
+					"coordinates": {
+						"$id": "coordinates", 
+                        "description": "Contains the coordinates",
+						"title": "Coordinates", 
+						"type": "object",
+						"required": [
+							"latitude",
+							"longitude"
+						],
+						"properties": {
+							"latitude": {
+                            "$id": "latitude", 
+                            "title": "Latitude",
+                            "description": "Latitude of the place", 
+                            "type": "number",
+                            "examples": [
+                                 11.0
+                            ],
+                            "minimum": -90.0,
+                            "maximum": 90.0,
+                            "additionalProperties": false
+                            },
+							"longitude": {
+								"$id": "longitude", 
+								"title": "Longitude",
+                                "description": "Longitude of the place", 
+								"type": "number",
+								"examples": [
+									11.0
+								],
+								"minimum": -180.0,
+								"maximum": 180.0,
+								"additionalProperties": false
+							}
+						},
+						"additionalProperties": false
+					}
+				},
+                "additionalProperties": false
+			}
+		}
+	},
+	"additionalProperties": false
+}
