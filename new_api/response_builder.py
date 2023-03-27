@@ -34,7 +34,7 @@ def signup_request(xml):
 
 #USER BUILDER
 def get_user(result):
-    usrs = {'users':{}}
+    usrs = {'users':[]}
     usr = {
         result.name:{
             'id': (result.id),
@@ -44,11 +44,11 @@ def get_user(result):
             }
         }
     }
-    usrs['users'].update(usr)
+    usrs['users'].append(usr)
     return usrs
 
 def get_users(result):
-    usrs = {'users':{}}
+    usrs = {'users':[]}
     for row in result:
         usr = {
             row.name:{
@@ -59,7 +59,7 @@ def get_users(result):
                 }
             }
         }
-        usrs['users'].update(usr)
+        usrs['users'].append(usr)
     return usrs
 
 def get_user_xml(row):
@@ -112,7 +112,7 @@ def get_users_xml(result):
 
 #PLACE BUILDER
 def get_place(result):
-    plcs = {'places':{}}
+    plcs = {'places':[]}
     plc = {
         result.name:{
             'id': (result.id),
@@ -122,7 +122,7 @@ def get_place(result):
             }
         }
     }
-    plcs['places'].update(plc)
+    plcs['places'].append(plc)
     return plcs
 
 def get_place_xml(row):
@@ -150,7 +150,7 @@ def get_place_xml(row):
     return tostring(root,encoding='UTF-8', method='xml', xml_declaration=True)
 
 def get_places(result):
-    plcs = {'places':{}}
+    plcs = {'places':[]}
     for row in result:
         plc = {
             row.name:{
@@ -161,7 +161,7 @@ def get_places(result):
                 }
             }
         }
-        plcs['places'].update(plc)
+        plcs['places'].append(plc)
     return plcs
 
 def get_places_xml(result):
@@ -221,7 +221,7 @@ def recursive(list):
 
 #ROUTE BUILDER
 def get_routes(result):
-    rts = {'routes':{}}
+    rts = {'routes':[]}
     for row in result:
         rt = {
             row.name:{
@@ -233,7 +233,7 @@ def get_routes(result):
                 'user_id': row.user_id
             }
         }
-        rts['routes'].update(rt)
+        rts['routes'].append(rt)
     return rts
 
 def get_routes_xml(result):
@@ -265,7 +265,7 @@ def get_routes_xml(result):
     return tostring(root,encoding='UTF-8', method='xml', xml_declaration=True)
 
 def get_route(row):
-    rts = {'routes':{}}
+    rts = {'routes':[]}
     rt = {
         row.name:{
             'id': (row.id),
@@ -276,7 +276,7 @@ def get_route(row):
             'user_id': row.user_id
         }
     }
-    rts['routes'].update(rt)
+    rts['routes'].append(rt)
     return rts
 
 def get_route_xml(row):

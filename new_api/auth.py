@@ -120,13 +120,13 @@ def user_put():
         password = None
         name = None
         if request.content_type == 'application/json':
-            email = request.json.get('credentials').get('email', None)
-            password = request.json.get('credentials').get('password', None)
-            name = request.json.get('credentials').get('name', None)
+            name = list(request.json.get('user'))[0]
+            email = request.json.get('user').get(name).get('credentials').get('email', None)
+            password = request.json.get('user').get(name).get('credentials').get('password', None)
         elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
-            email= credentials(request.data)['credentials']['email']
-            password= credentials(request.data)['credentials']['password']
-            name= credentials(request.data)['credentials']['name']
+            name= list(signup_request(request.data)['user'])[0]
+            email= signup_request(request.data)['user'][name]['credentials']['email']
+            password= signup_request(request.data)['user'][name]['credentials']['password']
         else:
             return Response('Wrong content type!',mimetype='application/json', status=400)
         if name is not None:
