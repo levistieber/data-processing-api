@@ -12,9 +12,6 @@
 			"title": "Place", 
 			"type": "object",
             "description": "Contains the data of the place",
-			"required": [
-				"EmmenLdast"
-			],
             "minProperties":1,
             "maxProperties": 1,
 			"additionalProperties": {

@@ -1,10 +1,8 @@
 # Validate JSON response
 # Returns False if error list was empty, meaning validation was successful
 # Returns True if error lsit is not empty, meaning there were errors while validating the data
-from io import StringIO
 import json
 from jsonschema import Draft7Validator
-import xml.etree.ElementTree as ET
 from lxml import etree
 
 
@@ -34,7 +32,7 @@ def validateXmlResponse(schemaLocation, xmlToValidate):
     xmlschema_doc = etree.parse(schemaLocation)
     xmlschema = etree.XMLSchema(xmlschema_doc)
 
-    xml_doc = etree.parse(xmlToValidate)
+    xml_doc = etree.fromstring(xmlToValidate)
     result = xmlschema.validate(xml_doc)
 
     print("Errors while validating xml:", xmlschema.error_log)

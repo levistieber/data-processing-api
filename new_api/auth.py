@@ -3,6 +3,7 @@ import bcrypt
 from database import db
 from models import User
 from response_builder import credentials, get_user, get_user_xml, get_users, get_users_xml, signup_request
+import validator
 
 auth_blueprint = Blueprint('auth_blueprint', __name__)
 
@@ -11,21 +12,25 @@ def login_post():
     email = None
     password = None
     if request.content_type == 'application/json':
+        if validator.validateJsonResponse(r'validators\json\login_schema.json', request.json):
+            return Response('Validation failed', mimetype='application/json', status=400)
         email = request.json.get('credentials').get('email', None)
         password = request.json.get('credentials').get('password', None)
     elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
+        if validator.validateXmlResponse(r'validators\xml\login_schema.xsd', request.data) is False:
+            return Response('Validation failed', mimetype='text/xml', status=400)
         email= credentials(request.data)['credentials']['email']
         password= credentials(request.data)['credentials']['password']
     if not email:
         if request.content_type == 'application/json':
             return Response('Missing email!', mimetype='application/json', status=400)
         elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
-            return Response('Missing email!', mimetype='text/html', status=400)
+            return Response('Missing email!', mimetype='text/xml', status=400)
     if not password:
         if request.content_type == 'application/json':
             return Response('Missing password!', mimetype='application/json', status=400)
         elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
-            return Response('Missing password!', mimetype='text/html', status=400)
+            return Response('Missing password!', mimetype='text/xml', status=400)
     #check for same email
     user = User.query.filter_by(email=email).first()
     if user and bcrypt.checkpw(password.encode('utf-8'), user.password):
@@ -46,10 +51,14 @@ def signup_post():
     password = None
     name = None
     if request.content_type == 'application/json':
+        if validator.validateJsonResponse(r'validators\json\signup_put_user_schema.json', request.json):
+            return Response('Validation failed', mimetype='application/json', status=400)
         name = list(request.json.get('user'))[0]
         email = request.json.get('user').get(name).get('credentials').get('email', None)
         password = request.json.get('user').get(name).get('credentials').get('password', None)
     elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
+        if validator.validateXmlResponse(r'validators\xml\signup_schema.xsd', request.data) is False:
+            return Response('Validation failed', mimetype='text/xml', status=400)
         name= list(signup_request(request.data)['user'])[0]
         email= signup_request(request.data)['user'][name]['credentials']['email']
         password= signup_request(request.data)['user'][name]['credentials']['password']
@@ -72,9 +81,9 @@ def signup_post():
     user = User.query.filter_by(email=email).first()
     if user:
         if request.content_type == 'application/json':
-            return Response('No account!', mimetype='application/json', status=400)
+            return Response('Used account!', mimetype='application/json', status=400)
         elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
-            return Response('No account!', mimetype='text/html', status=400)
+            return Response('Used account!', mimetype='text/html', status=400)
     #hash password
     hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     new_user = User(email=email, password=hashed, name=name)
@@ -93,18 +102,26 @@ def user():
     if request_id is None:
         if request.content_type == 'application/json':
             result = User.query.all()
+            if validator.validateJsonResponse(r'validators\json\get_user_schema.json', get_users(result)):
+                return Response('Validation failed', mimetype='application/json', status=400)
             return make_response(jsonify(get_users(result)), 200)
             ##return Response(get_places(result),mimetype='application/json',status=200)
         elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
             result = User.query.all()
+            if validator.validateXmlResponse(r'validators\xml\get_user_schema.xsd', get_users_xml(result)) is False:
+                return Response('Validation failed', mimetype='text/xml', status=400)
             return Response(get_users_xml(result), mimetype='text/xml',status=200)
     else:
         if request.content_type == 'application/json':
             result = User.query.filter_by(id=request_id).first()
+            if validator.validateJsonResponse(r'validators\json\get_user_schema.json', get_user(result)):
+                return Response('Validation failed', mimetype='application/json', status=400)
             return make_response(jsonify(get_user(result)), 200)
             ##return Response(get_place(result), mimetype='application/json',status=200)
         elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
             result = User.query.filter_by(id=request_id).first()
+            if validator.validateXmlResponse(r'validators\xml\get_user_schema.xsd', get_user_xml(result)) is False:
+                return Response('Validation failed', mimetype='text/xml', status=400)
             return Response(get_user_xml(result), mimetype='text/xml',status=200)
 
 #UPDATE user
@@ -120,10 +137,14 @@ def user_put():
         password = None
         name = None
         if request.content_type == 'application/json':
+            if validator.validateJsonResponse(r'validators\json\signup_put_user_schema.json', request.json):
+                return Response('Validation failed', mimetype='application/json', status=400)
             name = list(request.json.get('user'))[0]
             email = request.json.get('user').get(name).get('credentials').get('email', None)
             password = request.json.get('user').get(name).get('credentials').get('password', None)
         elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
+            if validator.validateXmlResponse(r'validators\xml\signup_schema.xsd', request.data) is False:
+                return Response('Validation failed', mimetype='text/xml', status=400)
             name= list(signup_request(request.data)['user'])[0]
             email= signup_request(request.data)['user'][name]['credentials']['email']
             password= signup_request(request.data)['user'][name]['credentials']['password']

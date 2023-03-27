@@ -1,6 +1,7 @@
 from flask import Blueprint, request, redirect, request, url_for, flash, Response, make_response, jsonify
 from database import db
 from models import Place, User
+import validator
 from response_builder import get_place, get_places, get_places_xml, get_place_response, get_place_xml
 
 place_blueprint = Blueprint('place_blueprint', __name__)
@@ -13,24 +14,34 @@ def place():
     if request_id is None:
         if request.content_type == 'application/json':
             result = Place.query.all()
+            if validator.validateJsonResponse(r'validators\json\get_place_schema.json', get_places(result)):
+                return Response('Validation failed', mimetype='application/json', status=400)
             return make_response(jsonify(get_places(result)), 200)
             ##return Response(get_places(result),mimetype='application/json',status=200)
         elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
             result = Place.query.all()
+            if validator.validateXmlResponse(r'validators\xml\get_place_schema.xsd', get_places_xml(result)) is False:
+                return Response('Validation failed', mimetype='text/xml', status=400)
             return Response(get_places_xml(result), mimetype='text/xml',status=200)
     else:
         if request.content_type == 'application/json':
             result = Place.query.filter_by(id=request_id).first()
+            if validator.validateJsonResponse(r'validators\json\get_place_schema.json', get_place(result)):
+                return Response('Validation failed', mimetype='application/json', status=400)
             return make_response(jsonify(get_place(result)), 200)
             ##return Response(get_place(result), mimetype='application/json',status=200)
         elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
             result = Place.query.filter_by(id=request_id).first()
+            if validator.validateXmlResponse(r'validators\xml\get_place_schema.xsd', get_place_xml(result)) is False:
+                return Response('Validation failed', mimetype='text/xml', status=400)
             return Response(get_place_xml(result), mimetype='text/xml',status=200)
 
 #POST place
 @place_blueprint.route('/api/resources/place', methods=['POST'])
 def place_post():
     if request.content_type == 'application/json':
+        if validator.validateJsonResponse(r'validators\json\post_put_place.json', request.json):
+            return Response('Validation failed', mimetype='application/json', status=400)
         name = list(request.json.get('place'))[0]
         ##latitude = request.json.get('place').get(list(request.json.get('place'))[0]).get('coordinates').get('latitude', None)
         latitude = request.json.get('place').get(name).get('coordinates').get('latitude', None)
@@ -44,6 +55,8 @@ def place_post():
             return Response('Missing longitude!',mimetype='application/json', status=400)
     elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
         ##return get_place_response(request.data)
+        if validator.validateXmlResponse(r'validators\xml\post_put_place.xsd', request.data) is False:
+            return Response('Validation failed', mimetype='text/xml', status=400)
         name = list(get_place_response(request.data)['place'])[0]
         latitude = get_place_response(request.data)['place'][name]['coordinates']['latitude']
         longitude = get_place_response(request.data)['place'][name]['coordinates']['longitude']
@@ -76,6 +89,8 @@ def place_put():
         latitude = None
         longitude = None
         if request.content_type == 'application/json':
+            if validator.validateJsonResponse(r'validators\json\post_put_place.json', request.json):
+                return Response('Validation failed', mimetype='application/json', status=400)
             name = list(request.json.get('place'))[0]
             ##latitude = request.json.get('place').get(list(request.json.get('place'))[0]).get('coordinates').get('latitude', None)
             latitude = request.json.get('place').get(name).get('coordinates').get('latitude', None)
@@ -83,6 +98,8 @@ def place_put():
             longitude = request.json.get('place').get(name).get('coordinates').get('longitude', None)
         elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
             ##return get_place_response(request.data)
+            if validator.validateXmlResponse(r'validators\xml\post_put_place.xsd', request.data) is False:
+                return Response('Validation failed', mimetype='text/xml', status=400)
             name = list(get_place_response(request.data)['place'])[0]
             latitude = get_place_response(request.data)['place'][name]['coordinates']['latitude']
             longitude = get_place_response(request.data)['place'][name]['coordinates']['longitude']
