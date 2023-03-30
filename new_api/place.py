@@ -68,6 +68,12 @@ def place_post():
             return Response('Missing longitude!',mimetype='text/xml',status=400)
     else:
         return Response('Wrong content type!',mimetype='application/json', status=400)
+    exist = Place.query.filter_by(name=name).first()
+    if exist:
+        if request.content_type == 'application/json':
+            return Response('Place exists!', mimetype='application/json', status=409)
+        elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
+            return Response('Place exists!', mimetype='text/xml', status=409)
     new_place = Place(name=name, latitude=latitude, longitude=longitude)
     db.session.add(new_place)
     db.session.commit()
@@ -105,6 +111,11 @@ def place_put():
             longitude = get_place_response(request.data)['place'][name]['coordinates']['longitude']
         else:
             return Response('Wrong content type!',mimetype='application/json', status=400)
+        if update is None:
+            if request.content_type == 'application/json':
+                return Response('User does not exists',mimetype='application/json', status=404)
+            if request.content_type == 'application/xml' or request.content_type == 'text/xml':
+                return Response('User does not exists',mimetype='text/xml', status=404)
         if name is not None:
              update.name = name
         if latitude is not None:

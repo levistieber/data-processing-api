@@ -5,6 +5,7 @@ from models import User
 from response_builder import credentials, get_user, get_user_xml, get_users, get_users_xml, signup_request
 import validator
 
+
 auth_blueprint = Blueprint('auth_blueprint', __name__)
 
 @auth_blueprint.route('/api/login', methods=['POST'])
@@ -37,12 +38,12 @@ def login_post():
         if request.content_type == 'application/json':
             return Response('Login successfully!', mimetype='application/json')
         elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
-            return Response('Login successfully!', mimetype='text/html')
+            return Response('Login successfully!', mimetype='text/xml')
     else:
         if request.content_type == 'application/json':
             return Response('Login failed!', mimetype='application/json', status=400)
         elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
-            return Response('Login failed!', mimetype='text/html', status=400)
+            return Response('Login failed!', mimetype='text/xml', status=400)
 
 #CREATE USER
 @auth_blueprint.route('/api/signup', methods=['POST'])
@@ -66,24 +67,24 @@ def signup_post():
         if request.content_type == 'application/json':
             return Response('Missing email!', mimetype='application/json', status=400)
         elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
-            return Response('Missing email!', mimetype='text/html', status=400)
+            return Response('Missing email!', mimetype='text/xml', status=400)
     if not password:
         if request.content_type == 'application/json':
             return Response('Missing password!', mimetype='application/json', status=400)
         elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
-            return Response('Missing password!', mimetype='text/html', status=400)
+            return Response('Missing password!', mimetype='text/xml', status=400)
     if not name:
         if request.content_type == 'application/json':
             return Response('Missing name!', mimetype='application/json', status=400)
         elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
-            return Response('Missing name!', mimetype='text/html', status=400)
+            return Response('Missing name!', mimetype='text/xml', status=400)
     #check for same email
     user = User.query.filter_by(email=email).first()
     if user:
         if request.content_type == 'application/json':
-            return Response('Used account!', mimetype='application/json', status=400)
+            return Response('Used account!', mimetype='application/json', status=409)
         elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
-            return Response('Used account!', mimetype='text/html', status=400)
+            return Response('Used account!', mimetype='text/xml', status=409)
     #hash password
     hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     new_user = User(email=email, password=hashed, name=name)
@@ -92,7 +93,7 @@ def signup_post():
     if request.content_type == 'application/json':
         return Response('Signup successfully!', mimetype='application/json')
     elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
-        return Response('Signup successfully!', mimetype='text/html')
+        return Response('Signup successfully!', mimetype='text/xml')
 
 #GET user
 @auth_blueprint.route('/api/resources/user')
@@ -150,6 +151,11 @@ def user_put():
             password= signup_request(request.data)['user'][name]['credentials']['password']
         else:
             return Response('Wrong content type!',mimetype='application/json', status=400)
+        if update is None:
+            if request.content_type == 'application/json':
+                return Response('User does not exists',mimetype='application/json', status=404)
+            if request.content_type == 'application/xml' or request.content_type == 'text/xml':
+                return Response('User does not exists',mimetype='text/xml', status=404)
         if name is not None:
              update.name = name
         if email is not None:
@@ -173,14 +179,14 @@ def user_delete():
         if request.content_type == 'application/json':
             user = User.query.filter_by(id=request_id)
             if user is None:
-                return Response('Wrong ID',mimetype='application/json', status=400)
+                return Response('Wrong ID',mimetype='application/json', status=404)
             user.delete()
             db.session.commit()
             return Response('User deleted',mimetype='application/json')
         elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
             user = User.query.filter_by(id=request_id)
             if user is None:
-                return Response('Wrong ID',mimetype='text/xml', status=400)
+                return Response('Wrong ID',mimetype='text/xml', status=404)
             user.delete()
             db.session.commit()
             return Response('User deleted',mimetype='text/xml')
