@@ -1,0 +1,236 @@
+{
+	"info": {
+		"_postman_id": "434a0d87-975d-41f8-bd28-32bed24497d2",
+		"name": "place",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21241026"
+	},
+	"item": [
+		{
+			"name": "get place xml",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/xml",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "127.0.0.1:5000/api/resources/place",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"resources",
+						"place"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get place json",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "127.0.0.1:5000/api/resources/place",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"resources",
+						"place"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post place json",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"place\":{\r\n        \"EmmenLast\":{\r\n            \"coordinates\":{\r\n                \"latitude\": 11.43,\r\n                \"longitude\": 11.43\r\n            }\r\n        }\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/resources/place",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"resources",
+						"place"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post place xml",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version='1.0' encoding='UTF-8'?>\r\n<place>\r\n    <name>EmmenFirst</name>\r\n    <coordinates>\r\n        <latitude>11.43</latitude>\r\n        <longitude>11.43</longitude>\r\n    </coordinates>\r\n</place>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/resources/place",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"resources",
+						"place"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "put place json",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"place\":{\r\n        \"EmmenLast\":{\r\n            \"coordinates\":{\r\n                \"latitude\": 12.43,\r\n                \"longitude\": 13.43\r\n            }\r\n        }\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/resources/place?id=4",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"resources",
+						"place"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "4"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "put place xml",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version='1.0' encoding='UTF-8'?>\r\n<place>\r\n    <name>EmmenFirst</name>\r\n    <coordinates>\r\n        <latitude>12.43</latitude>\r\n        <longitude>11.43</longitude>\r\n    </coordinates>\r\n</place>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/resources/place?id=5",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"resources",
+						"place"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

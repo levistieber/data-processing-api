@@ -1,0 +1,232 @@
+{
+	"info": {
+		"_postman_id": "7afd3f87-e799-439a-a2b9-a2743f0d41d1",
+		"name": "route",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21241026"
+	},
+	"item": [
+		{
+			"name": "post route xml",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/xml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version='1.0' encoding='UTF-8'?>\r\n<route>\r\n    <name>TestROutexmldsad</name>\r\n    <locations>\r\n        <start_id>1</start_id>\r\n        <end_id>3</end_id>\r\n    </locations>\r\n    <user_id>2</user_id>\r\n</route>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/resources/user/route",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"resources",
+						"user",
+						"route"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "put route json",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"route\":{\r\n        \"TestRouteJsonasddsa\":{\r\n            \"locations\":{\r\n                \"start_id\":3,\r\n                \"end_id\":3\r\n            },\r\n            \"user_id\":2\r\n        }\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/resources/user/route?id=5",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"resources",
+						"user",
+						"route"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get route xml",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/xml",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "127.0.0.1:5000/api/resources/user/route",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"resources",
+						"user",
+						"route"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get route json",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "127.0.0.1:5000/api/resources/user/route",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"resources",
+						"user",
+						"route"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post route json",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"route\":{\r\n        \"TestRodu\":{\r\n            \"locations\":{\r\n                \"start_id\":4,\r\n                \"end_id\":4\r\n            },\r\n            \"user_id\":2\r\n        }\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/resources/user/route",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"resources",
+						"user",
+						"route"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "put route xml",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "<?xml version='1.0' encoding='UTF-8'?>\r\n<route>\r\n    <name>TestRouteds</name>\r\n    <locations>\r\n        <start_id>3</start_id>\r\n        <end_id>4</end_id>\r\n    </locations>\r\n    <user_id>1</user_id>\r\n</route>",
+					"options": {
+						"raw": {
+							"language": "xml"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/resources/user/route?id=2",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"resources",
+						"user",
+						"route"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
