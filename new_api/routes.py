@@ -109,6 +109,11 @@ def route_put():
             user_id = get_route_response(request.data)['route']['user_id']
         else:
             return Response('Wrong content type!',mimetype='application/json', status=400)
+        if update is None:
+            if request.content_type == 'application/json':
+                return Response('User does not exists',mimetype='application/json', status=404)
+            if request.content_type == 'application/xml' or request.content_type == 'text/xml':
+                return Response('User does not exists',mimetype='text/xml', status=404)
         if name is not None:
             update.name = name
         if start is not None:

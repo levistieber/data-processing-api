@@ -270,8 +270,8 @@ def get_route(row):
         row.name:{
             'id': (row.id),
             'locations':{
-                'start': (row.start_id),
-                'end': (row.end_id)
+                'start_id': (row.start_id),
+                'end_id': (row.end_id)
             },
             'user_id': row.user_id
         }
@@ -287,8 +287,8 @@ def get_route_xml(row):
 
     name = Element('name')
     locations = Element('locations')
-    start = Element('start')
-    end = Element('end')
+    start = Element('start_id')
+    end = Element('end_id')
     user_id = Element('user_id')
 
     name.text = row.name
@@ -317,3 +317,19 @@ def get_route_response(xml):
                 else:
                     place_dic['route'][elem.tag] = elem.text
     return place_dic
+
+def error_toxml(d):
+
+    root = Element('response')
+    root.set('status', str(d['response']['error'][0]['status']))
+
+    error = Element('error')
+    message = Element('message')
+
+    error.set ( 'name', str(d['response']['error'][0]['name']))
+    message.text = str(d['response']['error'][0]['message'])
+
+    error.append(message)
+    root.append(error)
+
+    return tostring(root,encoding='UTF-8', method='xml')
