@@ -1,6 +1,5 @@
 from flask import Flask
 from auth import auth_blueprint
-from main import main_blueprint
 from place import place_blueprint
 from routes import route_blueprint
 from database import db
@@ -18,7 +17,6 @@ with app.app_context():
     db.create_all()
 
 app.register_blueprint(auth_blueprint)
-app.register_blueprint(main_blueprint)
 app.register_blueprint(place_blueprint)
 app.register_blueprint(route_blueprint)
 
