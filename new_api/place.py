@@ -2,7 +2,8 @@ from flask import Blueprint, request, redirect, request, url_for, flash, Respons
 from database import db
 from models import Place, User
 import validator
-from response_builder import get_place, get_places, get_places_xml, get_place_response, get_place_xml
+from response_builder import get_place, get_places, get_places_xml, get_place_response, get_place_xml, error_toxml
+from errors import errors_dic, custom_errors_dic
 
 place_blueprint = Blueprint('place_blueprint', __name__)
 
@@ -15,25 +16,23 @@ def place():
         if request.content_type == 'application/json':
             result = Place.query.all()
             if validator.validateJsonResponse(r'validators\json\get_place_schema.json', get_places(result)):
-                return Response('Validation failed', mimetype='application/json', status=400)
+                return make_response(jsonify(custom_errors_dic[0]), 400)
             return make_response(jsonify(get_places(result)), 200)
-            ##return Response(get_places(result),mimetype='application/json',status=200)
         elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
             result = Place.query.all()
             if validator.validateXmlResponse(r'validators\xml\get_place_schema.xsd', get_places_xml(result)) is False:
-                return Response('Validation failed', mimetype='text/xml', status=400)
+                return Response(error_toxml(custom_errors_dic[0]), mimetype='text/xml', status=400)
             return Response(get_places_xml(result), mimetype='text/xml',status=200)
     else:
         if request.content_type == 'application/json':
             result = Place.query.filter_by(id=request_id).first()
             if validator.validateJsonResponse(r'validators\json\get_place_schema.json', get_place(result)):
-                return Response('Validation failed', mimetype='application/json', status=400)
+                return make_response(jsonify(custom_errors_dic[0]), 400)
             return make_response(jsonify(get_place(result)), 200)
-            ##return Response(get_place(result), mimetype='application/json',status=200)
         elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
             result = Place.query.filter_by(id=request_id).first()
             if validator.validateXmlResponse(r'validators\xml\get_place_schema.xsd', get_place_xml(result)) is False:
-                return Response('Validation failed', mimetype='text/xml', status=400)
+                return Response(error_toxml(custom_errors_dic[0]), mimetype='text/xml', status=400)
             return Response(get_place_xml(result), mimetype='text/xml',status=200)
 
 #POST place
@@ -41,39 +40,36 @@ def place():
 def place_post():
     if request.content_type == 'application/json':
         if validator.validateJsonResponse(r'validators\json\post_put_place.json', request.json):
-            return Response('Validation failed', mimetype='application/json', status=400)
+            return make_response(jsonify(custom_errors_dic[0]), 400)
         name = list(request.json.get('place'))[0]
-        ##latitude = request.json.get('place').get(list(request.json.get('place'))[0]).get('coordinates').get('latitude', None)
         latitude = request.json.get('place').get(name).get('coordinates').get('latitude', None)
-        ##longitude = request.json.get('place').get(list(request.json.get('place'))[0]).get('coordinates').get('longitude', None)
         longitude = request.json.get('place').get(name).get('coordinates').get('longitude', None)
         if not name:
-            return Response('Missing name!',mimetype='application/json', status=400)
+            return make_response(jsonify(errors_dic[7]), 422)
         if not latitude:
-            return Response('Missing latitude!',mimetype='application/json', status=400)
+            return make_response(jsonify(errors_dic[7]), 422)
         if not longitude:
-            return Response('Missing longitude!',mimetype='application/json', status=400)
+            return make_response(jsonify(errors_dic[7]), 422)
     elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
-        ##return get_place_response(request.data)
         if validator.validateXmlResponse(r'validators\xml\post_put_place.xsd', request.data) is False:
-            return Response('Validation failed', mimetype='text/xml', status=400)
+            return Response(error_toxml(custom_errors_dic[0]), mimetype='text/xml', status=400)
         name = list(get_place_response(request.data)['place'])[0]
         latitude = get_place_response(request.data)['place'][name]['coordinates']['latitude']
         longitude = get_place_response(request.data)['place'][name]['coordinates']['longitude']
         if not name:
-            return Response('Missing name!',mimetype='text/xml',status=400)
+            return Response(error_toxml(errors_dic[7]), mimetype='text/xml', status=422)
         if not latitude:
-            return Response('Missing latitude!',mimetype='text/xml',status=400)
+            return Response(error_toxml(errors_dic[7]), mimetype='text/xml', status=422)
         if not longitude:
-            return Response('Missing longitude!',mimetype='text/xml',status=400)
+            return Response(error_toxml(errors_dic[7]), mimetype='text/xml', status=422)
     else:
-        return Response('Wrong content type!',mimetype='application/json', status=400)
+        return make_response(jsonify(errors_dic[6]), 415)
     exist = Place.query.filter_by(name=name).first()
     if exist:
         if request.content_type == 'application/json':
-            return Response('Place exists!', mimetype='application/json', status=409)
+            return make_response(jsonify(errors_dic[4]), 409)
         elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
-            return Response('Place exists!', mimetype='text/xml', status=409)
+            return Response(error_toxml(errors_dic[4]), mimetype='text/xml', status=409)
     new_place = Place(name=name, latitude=latitude, longitude=longitude)
     db.session.add(new_place)
     db.session.commit()
@@ -88,7 +84,10 @@ def place_put():
     request_id = request.args.get('id')
     
     if request_id is None:
-        return 'No id', 400
+        if request.content_type == 'application/json':
+            return make_response(jsonify(errors_dic[0]), 400)
+        else:
+            return Response(error_toxml(errors_dic[0]), mimetype='text/xml', status=400)
     else:
         update = Place.query.filter_by(id=request_id).first()
         name= None
@@ -96,16 +95,13 @@ def place_put():
         longitude = None
         if request.content_type == 'application/json':
             if validator.validateJsonResponse(r'validators\json\post_put_place.json', request.json):
-                return Response('Validation failed', mimetype='application/json', status=400)
+                return make_response(jsonify(custom_errors_dic[0]), 400)
             name = list(request.json.get('place'))[0]
-            ##latitude = request.json.get('place').get(list(request.json.get('place'))[0]).get('coordinates').get('latitude', None)
             latitude = request.json.get('place').get(name).get('coordinates').get('latitude', None)
-            ##longitude = request.json.get('place').get(list(request.json.get('place'))[0]).get('coordinates').get('longitude', None)
             longitude = request.json.get('place').get(name).get('coordinates').get('longitude', None)
         elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
-            ##return get_place_response(request.data)
             if validator.validateXmlResponse(r'validators\xml\post_put_place.xsd', request.data) is False:
-                return Response('Validation failed', mimetype='text/xml', status=400)
+                return Response(error_toxml(custom_errors_dic[0]), mimetype='text/xml', status=400)
             name = list(get_place_response(request.data)['place'])[0]
             latitude = get_place_response(request.data)['place'][name]['coordinates']['latitude']
             longitude = get_place_response(request.data)['place'][name]['coordinates']['longitude']
@@ -113,9 +109,9 @@ def place_put():
             return Response('Wrong content type!',mimetype='application/json', status=400)
         if update is None:
             if request.content_type == 'application/json':
-                return Response('User does not exists',mimetype='application/json', status=404)
+                return make_response(jsonify(errors_dic[2]), 404)
             if request.content_type == 'application/xml' or request.content_type == 'text/xml':
-                return Response('User does not exists',mimetype='text/xml', status=404)
+                return Response(error_toxml(errors_dic[2]), mimetype='text/xml', status=404)
         if name is not None:
              update.name = name
         if latitude is not None:
@@ -133,19 +129,22 @@ def place_put():
 def place_delete():
     request_id = request.args.get('id')
     if request_id is None:
-        return 'No id', 400
+        if request.content_type == 'application/json':
+            return make_response(jsonify(errors_dic[0]), 400)
+        else:
+            return Response(error_toxml(errors_dic[0]), mimetype='text/xml', status=400)
     else:
         if request.content_type == 'application/json':
             place = Place.query.filter_by(id=request_id)
             if place is None:
-                return Response('Wrong ID',mimetype='application/json', status=400)
+                return make_response(jsonify(errors_dic[2]), 404)
             place.delete()
             db.session.commit()
             return Response('Place deleted',mimetype='application/json')
         elif request.content_type == 'application/xml' or request.content_type == 'text/xml':
             place = Place.query.filter_by(id=request_id)
             if place is None:
-                return Response('Wrong ID',mimetype='text/xml', status=400)
+                return Response(error_toxml(errors_dic[2]), mimetype='text/xml', status=404)
             place.delete()
             db.session.commit()
             return Response('Place deleted',mimetype='text/xml')
