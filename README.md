@@ -1,3 +1,26 @@
+#IMPROVEMENTS by Levente Stieber
+I have researched best practices and coding conventions in Python and Flask, to have a better idea of how to optimize the code. Tried to make use of my existing knowledge and my freshly gained knowledge to be able to recognize possibilities for improvement, for example assigning multiple variables at once on one line, which is a python-specific feature.
+Apart from this, I wrote a lot of comments throughout the code to explain what is happening.
+Here are some points that I improved in the code (excluding the comments):
+
+__init__.py:
+- I put all the blueprints in one list, then looped through the list to register all of them. 
+- Apart from that, according to Flask and Python best practices, separated the app creation and the running. This can be useful when using the app in different environments (development, testing, etc)
+
+auth.py, place.py, routes.py:
+- Most modifications were done in these files.
+- When assigning multiple variables at once, instead of doing it in new line everytime, now I am assigning them at once (for example: email, password = None, None)
+- I am saving the content type request to a variable, as it is reused often 
+- Saving the possible content types in variables, on module level (contents_xml = ('application/xml', 'text/xml'), content_json = 'application/json')
+- Then I am checking the content type using these variables
+- Instead of checking statements separately, but giving the same response for them, i am aggregating those into one if statement (if not name or not start or not end or not user_id)
+- Variable assignments were the same in both possibilities for the if statement, so I put them outside the statement (for example user = User.query.filter_by(id=request_id))
+- Schema validations for XML were checking for False, but Json was checking for True, so I fixed that
+
+response_builder.py:
+- Deleted the unnecessary commented codes that were left there
+
+## End of section. From here, the Readme file starts
 # data-processing-api
 
 In our project, we were striving for the implementation of a route planning application. In the application, the user is able to input their desired points, and ask for a route planning. The app then creates a route plan for the user with the help of API calls. The idea was based on our original project done last year, the E-Grips. It was an insertable handlebar made to make sure biking can be done more safely, as the bike grip vibrates when you have to take  a turn, alerting you and making sure you do not lose track of your route. 
