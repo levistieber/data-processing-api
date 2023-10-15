@@ -22,9 +22,7 @@ def signup_request(xml):
             if not elem.tag==node.tag:
                 if elem:
                     inner_dic[name][elem.tag] = recursive(elem)
-                    ##place_dic['place'][elem.tag] = recursive(elem)
                 else:
-                    ##inner_dic[name][elem.tag] = recursive(elem)
                     if elem.tag == 'name':
                         name = elem.text
                         inner_dic = {elem.text :{}}
@@ -199,16 +197,13 @@ def get_place_response(xml):
             if not elem.tag==node.tag:
                 if elem:
                     inner_dic[name][elem.tag] = recursive(elem)
-                    ##place_dic['place'][elem.tag] = recursive(elem)
                 else:
-                    ##inner_dic[name][elem.tag] = recursive(elem)
                     if elem.tag == 'name':
                         name = elem.text
                         inner_dic = {elem.text :{}}
                     inner_dic[name][elem.tag] = elem.text
     place_dic['place'].update(inner_dic)
     return place_dic
-    ##return inner_dic
 
 def recursive(list):
     if list:
