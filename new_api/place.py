@@ -7,6 +7,10 @@ from errors import errors_dic, custom_errors_dic
 
 place_blueprint = Blueprint('place_blueprint', __name__)
 
+#Define possible content types in variables
+contents_xml = ('application/xml', 'text/xml')
+content_json = ('application/json')
+
 #GET place
 @place_blueprint.route('/api/resources/place')
 def place():
@@ -15,10 +19,6 @@ def place():
 
     #Save the content type of the request in a variable
     content_type = request.content_type
-
-    #Define possible content types in variables
-    contents_xml = ('application/xml', 'text/xml')
-    content_json = ('application/json')
 
     #Check if 'id' is not present in the request
     if request_id is None:
@@ -59,10 +59,6 @@ def place():
 def place_post():
     #Save the content type of the request in a variable
     content_type = request.content_type
-
-    #Define possible content types in variables
-    contents_xml = ('application/xml', 'text/xml')
-    content_json = ('application/json')
     
     if content_type == content_json:
         #Validate JSON response with JSON schema, return error if invalid
@@ -124,10 +120,6 @@ def place_put():
 
     #Save the content type of the request in a variable
     content_type = request.content_type
-
-    #Define possible content types in variables
-    contents_xml = ('application/xml', 'text/xml')
-    content_json = ('application/json')
 
     #Error response if id is not present in request
     if request_id is None:
@@ -196,10 +188,6 @@ def place_delete():
 
     #Save the content type of the request in a variable
     content_type = request.content_type
-
-    #Define possible content types in variables
-    contents_xml = ('application/xml', 'text/xml')
-    content_json = ('application/json')
 
     #Check if id is not present in request
     if request_id is None:
