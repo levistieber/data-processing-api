@@ -7,6 +7,10 @@ from errors import errors_dic, custom_errors_dic
 
 route_blueprint = Blueprint('route_blueprint', __name__)
 
+#Define possible content types in variables
+contents_xml = ('application/xml', 'text/xml')
+content_json = ('application/json')
+
 #GET route
 @route_blueprint.route('/api/resources/user/route')
 def route():
@@ -15,10 +19,6 @@ def route():
 
     #Save the content type of the request in a variable
     content_type = request.content_type
-
-    #Define possible content types in variables
-    contents_xml = ('application/xml', 'text/xml')
-    content_json = ('application/json')
 
     #Check if id is not present in request
     if request_id is None:
@@ -65,10 +65,6 @@ def route():
 def route_post():
     #Save the content type of the request in a variable
     content_type = request.content_type
-
-    #Define possible content types in variables
-    contents_xml = ('application/xml', 'text/xml')
-    content_json = ('application/json')
     
     if content_type == content_json:
         #Validate json response with schema
@@ -121,10 +117,6 @@ def route_put():
 
     #Save the content type of the request in a variable
     content_type = request.content_type
-
-    #Define possible content types in variables
-    contents_xml = ('application/xml', 'text/xml')
-    content_json = ('application/json')
 
     #Check if id is not present in request. Error response if not
     if request_id is None:
@@ -199,10 +191,6 @@ def route_delete():
 
     #Save the content type of the request in a variable
     content_type = request.content_type
-
-    #Define possible content types in variables
-    contents_xml = ('application/xml', 'text/xml')
-    content_json = ('application/json')
 
     #Check if id is missing in the request, error response if missing
     if request_id is None:
