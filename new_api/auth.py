@@ -8,6 +8,10 @@ from errors import errors_dic, custom_errors_dic
 
 auth_blueprint = Blueprint('auth_blueprint', __name__)
 
+#Saving possible content types in variables
+contents_xml = ('application/xml', 'text/xml')
+content_json = 'application/json'
+
 #API route for Login
 @auth_blueprint.route('/api/login', methods=['POST'])
 def login_post():
@@ -15,10 +19,6 @@ def login_post():
 
     #Save content type of request in a variable
     content_type = request.content_type
-
-    #Saving possible content types in variables
-    contents_xml = ('application/xml', 'text/xml')
-    content_json = 'application/json'
 
     #Check if request is in JSON
     if content_type == content_json:
@@ -70,10 +70,6 @@ def signup_post():
     #Save content type of request in a variable
     content_type = request.content_type
     
-    #Saving possible content types in variables
-    contents_xml = ('application/xml', 'text/xml')
-    content_json = 'application/json'
-
     #Check if request is in JSON
     if content_type == content_json:
         #Validate request against Json schema
@@ -134,10 +130,6 @@ def user():
     #Save content type of request in a variable
     content_type = request.content_type
 
-    #Saving possible content types in variables
-    contents_xml = ('application/xml', 'text/xml')
-    content_json = 'application/json'
-
     #Check if id is present or not in the request
     if request_id is None:
     #No id in request
@@ -178,10 +170,6 @@ def user_put():
 
     #Save content type of request in a variable
     content_type = request.content_type
-
-    #Saving possible content types in variables
-    contents_xml = ('application/xml', 'text/xml')
-    content_json = 'application/json'
 
     #Check if id is present in the request. If not, error response
     if request_id is None:
@@ -250,10 +238,6 @@ def user_delete():
 
     #Save content type of request in a variable
     content_type = request.content_type
-
-    #Saving possible content types in variables
-    contents_xml = ('application/xml', 'text/xml')
-    content_json = 'application/json'
 
     #Check if id in request is present. If not, error response 400
     if request_id is None:
