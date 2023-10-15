@@ -1,4 +1,4 @@
-#IMPROVEMENTS by Levente Stieber
+# IMPROVEMENTS by Levente Stieber
 I have researched best practices and coding conventions in Python and Flask, to have a better idea of how to optimize the code. Tried to make use of my existing knowledge and my freshly gained knowledge to be able to recognize possibilities for improvement, for example assigning multiple variables at once on one line, which is a python-specific feature.
 Apart from this, I wrote a lot of comments throughout the code to explain what is happening.
 Here are some points that I improved in the code (excluding the comments):
